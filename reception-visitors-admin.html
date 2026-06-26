@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Staffscanner Reception Visitors</title>
+  <style>
+    :root{
+      --bg:#eef7fd;--card:rgba(255,255,255,.90);--text:#102033;--muted:#617386;
+      --blue:#0093e6;--blue-dark:#006fab;--blue-soft:#d1edfd;--green:#22a06b;
+      --red:#d64545;--amber:#f0a202;--line:rgba(16,32,51,.12);
+      --shadow:0 20px 60px rgba(0,74,120,.16);--radius:26px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 10% 10%,rgba(0,147,230,.20),transparent 32%),radial-gradient(circle at 92% 84%,rgba(209,237,253,.95),transparent 38%),linear-gradient(135deg,#f8fcff,#eef7fd)}
+    .shell{max-width:1120px;margin:0 auto;padding:22px}
+    .hero{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:24px;margin-bottom:18px;border-radius:32px;background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,255,255,.66));box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.75);backdrop-filter:blur(14px)}
+    .brand{display:flex;align-items:center;gap:15px}
+    .logo{width:58px;height:58px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),#55c2f7);color:white;box-shadow:0 14px 28px rgba(0,147,230,.28);font-size:30px;font-weight:900}
+    h1{font-size:28px;margin:0 0 5px;font-weight:850;letter-spacing:-.025em}
+    .sub{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+    .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 12px;background:#e9fff5;color:#13754d;font-weight:800;font-size:12px;border:1px solid rgba(34,160,107,.18)}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(34,160,107,.12)}
+    .grid{display:grid;grid-template-columns:1fr 1.15fr;gap:18px}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.82);box-shadow:var(--shadow);border-radius:var(--radius);backdrop-filter:blur(12px);overflow:hidden}
+    .cardHeader{padding:18px 20px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .cardHeader h2{font-size:18px;margin:0}
+    .cardBody{padding:20px}
+    .notice{background:#fff8e5;border:1px solid rgba(240,162,2,.28);color:#684500;padding:12px 14px;border-radius:17px;margin-bottom:16px;font-size:13px;line-height:1.45}
+    label{display:block;font-size:12px;font-weight:850;color:#43566b;margin:0 0 7px;text-transform:uppercase;letter-spacing:.045em}
+    input{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.94);color:var(--text);border-radius:16px;padding:13px 14px;font:inherit;outline:none;transition:.15s border,.15s box-shadow,.15s background}
+    input:focus{border-color:rgba(0,147,230,.58);box-shadow:0 0 0 4px rgba(0,147,230,.12);background:white}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+    .field{margin-bottom:14px}
+    .checkLine{display:flex;gap:10px;align-items:center;margin:6px 0 15px;color:#43566b;font-weight:700}
+    .checkLine input{width:19px;height:19px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button{appearance:none;border:0;border-radius:16px;padding:12px 16px;font-weight:850;cursor:pointer;font-family:inherit;transition:.15s transform,.15s box-shadow,.15s opacity;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    button:active{transform:translateY(1px)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .primary{background:var(--blue);color:white;box-shadow:0 12px 24px rgba(0,147,230,.22)}
+    .primary:hover{background:var(--blue-dark)}
+    .secondary{background:white;color:var(--text);border:1px solid var(--line)}
+    .danger{background:#fff1f1;color:#a52828;border:1px solid rgba(214,69,69,.22)}
+    .warning{background:#fff8e5;color:#7d5200;border:1px solid rgba(240,162,2,.25)}
+    .mini{padding:8px 10px;border-radius:12px;font-size:12px}
+    .preview{margin-top:18px;padding:16px;border-radius:20px;background:rgba(255,255,255,.66);border:1px solid var(--line)}
+    .previewTitle{font-weight:850;margin:0 0 8px}
+    .previewLine{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+    .toolbar{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin-bottom:10px}
+    .quickActions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .statusLine{display:none;margin:0 0 12px;padding:10px 12px;border-radius:14px;background:#eaf7ff;border:1px solid rgba(0,147,230,.16);color:#07547f;font-size:13px;font-weight:700}
+    .statusLine.show{display:block}
+    .visitorList{display:flex;flex-direction:column;gap:10px}
+    .visitorItem{padding:14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.76)}
+    .visitorTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .visitorName{font-size:16px;font-weight:900;margin:0 0 4px}
+    .visitorMeta{font-size:13px;color:var(--muted);line-height:1.45;margin:0}
+    .badge{display:inline-flex;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;margin-top:8px}
+    .badgeOn{background:#e9fff5;color:#13754d}
+    .badgeOff{background:#f2f4f7;color:#617386}
+    .empty{padding:22px;border:1px dashed rgba(16,32,51,.20);border-radius:20px;text-align:center;color:var(--muted);background:rgba(255,255,255,.55)}
+    .notifyWrap{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:10px;z-index:50;width:min(440px,calc(100vw - 36px))}
+    .noticeToast{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:flex-start;padding:14px 15px;border-radius:18px;background:#102033;color:white;box-shadow:0 18px 44px rgba(0,0,0,.22);animation:slideIn .2s ease-out;line-height:1.35}
+    .noticeToast.success{background:#0f5132}
+    .noticeToast.error{background:#9f2626}
+    .noticeToast.info{background:#102033}
+    .noticeToast.warning{background:#684500}
+    .noticeIcon{font-size:18px;line-height:1}
+    .noticeTitle{font-weight:900;margin:0 0 2px;font-size:14px}
+    .noticeMsg{margin:0;font-size:13px;opacity:.92}
+    .noticeClose{background:rgba(255,255,255,.14);color:white;border:0;width:26px;height:26px;border-radius:10px;padding:0;font-weight:900}
+    @keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .loading{opacity:.64;pointer-events:none}
+    .editBanner{display:none;background:#eaf7ff;border:1px solid rgba(0,147,230,.20);color:#07547f;padding:12px 14px;border-radius:17px;margin-bottom:16px;font-size:13px;font-weight:750}
+    .editBanner.show{display:block}
+    .modalBackdrop{position:fixed;inset:0;background:rgba(16,32,51,.42);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;backdrop-filter:blur(5px)}
+    .modalBackdrop.show{display:flex}
+    .modal{width:min(480px,100%);background:white;border-radius:24px;padding:22px;box-shadow:0 28px 80px rgba(0,0,0,.30);border:1px solid rgba(255,255,255,.8)}
+    .modal h3{margin:0 0 8px;font-size:20px}
+    .modal p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}
+    .modal .actions{justify-content:flex-end;margin-top:20px}
+    @media(max-width:860px){.grid{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.row,.toolbar{grid-template-columns:1fr}.shell{padding:14px}.visitorTop{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="hero">
+      <div class="brand"><div class="logo">👋</div><div><h1>Reception Visitors</h1><p class="sub">Add visitors, update details, cancel visits or remove test entries. Changes update the welcome dashboard automatically.</p></div></div>
+      <span class="pill"><span class="dot"></span> Live visitor admin</span>
+    </header>
+
+    <div class="grid">
+      <section class="card" id="formCard">
+        <div class="cardHeader"><h2 id="formTitle">Add visitor</h2></div>
+        <div class="cardBody">
+          <div class="notice"><b>Tip:</b> Cancel hides a visitor from the welcome dashboard but keeps the list record. Delete removes the visitor from the Microsoft List.</div>
+          <div class="editBanner" id="editBanner">You are editing an existing visitor. Select <b>Cancel editing</b> to return to add mode.<span id="editIdText" style="display:none"></span></div>
+
+          <form id="visitorForm">
+            <input id="editingId" type="hidden" />
+            <div class="field"><label for="visitorName">Visitor name</label><input id="visitorName" required autocomplete="name" placeholder="e.g. Alistair Stewart" /></div>
+            <div class="field"><label for="organisation">Company / organisation</label><input id="organisation" autocomplete="organization" placeholder="e.g. Keane Premier Group" /></div>
+            <div class="row"><div class="field"><label for="visitDate">Visit date</label><input id="visitDate" type="date" required /></div><div class="field"><label for="arrivalTime">Arrival time</label><input id="arrivalTime" type="time" required /></div></div>
+            <div class="row"><div class="field"><label for="departureTime">Departure time</label><input id="departureTime" type="time" /></div><div class="field"><label for="thankYouMinutes">Thank-you display minutes</label><input id="thankYouMinutes" type="number" min="0" step="1" value="5" /></div></div>
+            <label class="checkLine"><input id="showOnBoard" type="checkbox" checked />Show on welcome dashboard</label>
+            <div class="actions"><button class="primary" type="submit" id="saveBtn">Add visitor</button><button class="secondary" type="button" onclick="clearForm()">Clear form</button><button class="warning" type="button" id="cancelEditBtn" onclick="cancelEditing()" style="display:none">Cancel editing</button></div>
+          </form>
+
+          <div class="preview"><p class="previewTitle">Dashboard preview</p><p class="previewLine" id="previewText">Complete the form to preview the visitor details.</p></div>
+        </div>
+      </section>
+
+      <section class="card" id="listCard">
+        <div class="cardHeader"><h2>Visitor list</h2><button class="secondary mini" onclick="loadVisitorsRange()">Refresh</button></div>
+        <div class="cardBody">
+          <div class="toolbar">
+            <div class="field" style="margin-bottom:0"><label for="filterStartDate">View visitors from</label><input id="filterStartDate" type="date" /></div>
+            <div class="field" style="margin-bottom:0"><label for="filterEndDate">To</label><input id="filterEndDate" type="date" /></div>
+            <button class="primary" type="button" onclick="loadVisitorsRange()">Load visitors</button>
+          </div>
+          <div class="quickActions"><button class="secondary mini" type="button" onclick="setDateRange('today')">Today</button><button class="secondary mini" type="button" onclick="setDateRange('tomorrow')">Tomorrow</button><button class="secondary mini" type="button" onclick="setDateRange('week')">Next 7 days</button></div>
+          <div id="listStatus" class="statusLine"></div>
+          <div id="visitorList" class="visitorList"><div class="empty">Today will load automatically. You can also choose a date range to view, edit, cancel or delete visitors.</div></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="notifyWrap" class="notifyWrap" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="confirmModal" class="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal">
+      <h3 id="confirmTitle">Confirm action</h3>
+      <p id="confirmMessage">Are you sure?</p>
+      <div class="actions"><button class="secondary" type="button" id="confirmNo">No, go back</button><button class="danger" type="button" id="confirmYes">Yes, continue</button></div>
+    </div>
+  </div>
+
+<script>
+const CONFIG = {
+  FLOW_URL: "https://default3595aeccdecc45429c69955f0a059c.9b.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/fb52f8784a67433487b462fdc00c2077/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-etxCwCxb4O6aFZg4kVSvRCiZ4vjFoA6dL8mq-eEHwY"
+};
+
+const MAX_RANGE_DAYS = 31;
+const $ = (id) => document.getElementById(id);
+let currentVisitors = [];
+let confirmResolver = null;
+
+function todayISO(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
+function addDaysISO(baseISO, days){const d=new Date(baseISO + "T00:00:00");d.setDate(d.getDate()+days);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
+function nowHHMM(){const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function escapeHtml(value){return String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",""":"&quot;"}[c]))}
+function getId(item){return item.ID ?? item.Id ?? item.id}
+function getBool(v){return v === true || v === "true" || v === 1 || v === "1" || String(v).toLowerCase() === "yes"}
+function cleanDate(v){if(!v) return ""; return String(v).slice(0,10)}
+function cleanTime(v){if(!v) return ""; const s=String(v); return s.length >= 5 ? s.slice(0,5) : s}
+function formatRange(start,end){return start === end ? start : `${start} to ${end}`}
+function daysBetween(start,end){return Math.round((new Date(end+"T00:00:00") - new Date(start+"T00:00:00"))/86400000)}
+
+function notify(title, message="", type="info", timeout=4200){
+  const wrap=$("notifyWrap");
+  const item=document.createElement("div");
+  const icons={success:"✓",error:"!",warning:"⚠",info:"i"};
+  item.className=`noticeToast ${type}`;
+  item.innerHTML=`<div class="noticeIcon">${icons[type] || icons.info}</div><div><p class="noticeTitle">${escapeHtml(title)}</p>${message ? `<p class="noticeMsg">${escapeHtml(message)}</p>` : ""}</div><button class="noticeClose" type="button" aria-label="Dismiss notification">×</button>`;
+  item.querySelector("button").addEventListener("click",()=>item.remove());
+  wrap.appendChild(item);
+  setTimeout(()=>{ if(item.parentNode) item.remove(); }, timeout);
+}
+
+function setStatus(message,type="info"){
+  const s=$("listStatus");
+  s.textContent=message;
+  s.className="statusLine show";
+  if(type==="error"){s.style.background="#fff1f1";s.style.color="#9f2626";s.style.borderColor="rgba(214,69,69,.22)"}
+  else{s.style.background="#eaf7ff";s.style.color="#07547f";s.style.borderColor="rgba(0,147,230,.16)"}
+}
+function clearStatus(){$("listStatus").classList.remove("show")}
+
+function confirmAction({title,message,confirmText="Yes, continue",danger=true}){
+  const modal=$("confirmModal");
+  $("confirmTitle").textContent=title;
+  $("confirmMessage").textContent=message;
+  $("confirmYes").textContent=confirmText;
+  $("confirmYes").className=danger ? "danger" : "primary";
+  modal.classList.add("show");
+  return new Promise(resolve=>{ confirmResolver=resolve; });
+}
+function closeConfirm(result){
+  $("confirmModal").classList.remove("show");
+  if(confirmResolver) confirmResolver(result);
+  confirmResolver=null;
+}
+$("confirmNo").addEventListener("click",()=>closeConfirm(false));
+$("confirmYes").addEventListener("click",()=>closeConfirm(true));
+$("confirmModal").addEventListener("click",e=>{if(e.target.id==="confirmModal") closeConfirm(false)});
+
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && $("confirmModal").classList.contains("show")) closeConfirm(false); });
+
+function formVisitor(){
+  const minsRaw = $("thankYouMinutes").value;
+  const mins = minsRaw === "" ? 0 : Number(minsRaw);
+  return {
+    id: $("editingId").value ? Number($("editingId").value) : null,
+    VisitorName: $("visitorName").value.trim(),
+    Organisation: $("organisation").value.trim(),
+    VisitDate: $("visitDate").value,
+    ArrivalTime: $("arrivalTime").value,
+    DepartureTime: $("departureTime").value,
+    ShowOnBoard: $("showOnBoard").checked,
+    ShowThankYouMinutes: Number.isFinite(mins) ? mins : 0
+  };
+}
+
+function validateVisitor(v){
+  if(!v.VisitorName) return "Please enter the visitor name.";
+  if(!v.VisitDate) return "Please choose a visit date.";
+  if(!v.ArrivalTime) return "Please choose an arrival time.";
+  if(v.DepartureTime && v.DepartureTime < v.ArrivalTime) return "Departure time cannot be earlier than arrival time.";
+  return "";
+}
+
+function updatePreview(){
+  const v=formVisitor();
+  const mode=v.id ? "Updating" : "Adding";
+  $("previewText").textContent = `${mode}: ${v.VisitorName || "Visitor name"} from ${v.Organisation || "organisation"} on ${v.VisitDate || "date"}, arriving at ${v.ArrivalTime || "arrival time"}${v.DepartureTime ? ` and leaving at ${v.DepartureTime}` : ""}. Welcome board: ${v.ShowOnBoard ? "show" : "hide"}. Thank-you display: ${v.ShowThankYouMinutes} minute(s).`;
+}
+
+async function sendToFlow(payload){
+  const response = await fetch(CONFIG.FLOW_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  const text=await response.text();
+  let data={};
+  try{data=text?JSON.parse(text):{}}catch{data={raw:text}}
+  if(!response.ok || data.ok === false){throw new Error(data.message || data.error || `Power Automate returned HTTP ${response.status}`)}
+  return data;
+}
+
+function setLoading(isLoading){$("formCard").classList.toggle("loading", isLoading);$("listCard").classList.toggle("loading", isLoading)}
+
+function clearForm(){
+  $("visitorForm").reset();
+  $("editingId").value="";
+  $("visitDate").value=todayISO();
+  $("arrivalTime").value=nowHHMM();
+  $("thankYouMinutes").value="5";
+  $("showOnBoard").checked=true;
+  $("formTitle").textContent="Add visitor";
+  $("saveBtn").textContent="Add visitor";
+  $("cancelEditBtn").style.display="none";
+  $("editBanner").classList.remove("show");
+  updatePreview();
+}
+
+function cancelEditing(){clearForm();notify("Editing cancelled", "You are back in add visitor mode.", "info")}
+
+function editVisitor(id){
+  const v=currentVisitors.find(x => Number(getId(x)) === Number(id));
+  if(!v){notify("Could not find visitor", "Refresh the list and try again.", "error");return}
+  $("editingId").value=getId(v);
+  $("visitorName").value=v.VisitorName ?? v.Title ?? "";
+  $("organisation").value=v.Organisation ?? "";
+  $("visitDate").value=cleanDate(v.VisitDate);
+  $("arrivalTime").value=cleanTime(v.ArrivalTime);
+  $("departureTime").value=cleanTime(v.DepartureTime);
+  $("thankYouMinutes").value=v.ShowThankYouMinutes ?? 0;
+  $("showOnBoard").checked=getBool(v.ShowOnBoard);
+  $("formTitle").textContent="Edit visitor";
+  $("saveBtn").textContent="Update visitor";
+  $("cancelEditBtn").style.display="inline-flex";
+  $("editIdText").textContent=getId(v);
+  $("editBanner").classList.add("show");
+  updatePreview();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function cancelVisitor(id){
+  const v=currentVisitors.find(x => Number(getId(x)) === Number(id));
+  const name=(v?.VisitorName || v?.Title || "this visitor");
+  const ok=await confirmAction({title:`Cancel ${name}?`,message:"This keeps the visitor in the Microsoft List but hides them from the welcome dashboard.",confirmText:"Cancel visit",danger:false});
+  if(!ok) return;
+  try{setLoading(true);await sendToFlow({action:"cancel", id:Number(id)});notify("Visitor cancelled", "The visit has been hidden from the welcome dashboard.", "success");await loadVisitorsRange(false)}catch(e){notify("Could not cancel visitor", e.message, "error")}finally{setLoading(false)}
+}
+
+async function deleteVisitor(id){
+  const v=currentVisitors.find(x => Number(getId(x)) === Number(id));
+  const name=(v?.VisitorName || v?.Title || "this visitor");
+  const ok=await confirmAction({title:`Delete ${name}?`,message:"This removes the visitor from the Microsoft List. This cannot be undone from this page.",confirmText:"Delete visitor",danger:true});
+  if(!ok) return;
+  try{setLoading(true);await sendToFlow({action:"delete", id:Number(id)});notify("Visitor deleted", "The visitor has been removed from the list.", "success");await loadVisitorsRange(false)}catch(e){notify("Could not delete visitor", e.message, "error")}finally{setLoading(false)}
+}
+
+function renderVisitors(items, rangeLabel=""){
+  currentVisitors = Array.isArray(items) ? items : [];
+  const box=$("visitorList");
+  if(!currentVisitors.length){box.innerHTML=`<div class="empty">No visitors found${rangeLabel ? ` for ${escapeHtml(rangeLabel)}` : ""}.</div>`;return}
+  box.innerHTML=currentVisitors.map(v=>{
+    const id=getId(v);
+    const name=escapeHtml(v.VisitorName || v.Title || "Unnamed visitor");
+    const org=escapeHtml(v.Organisation || "No organisation");
+    const date=escapeHtml(cleanDate(v.VisitDate));
+    const start=escapeHtml(cleanTime(v.ArrivalTime) || "No arrival time");
+    const end=escapeHtml(cleanTime(v.DepartureTime) || "No departure time");
+    const mins=escapeHtml(v.ShowThankYouMinutes ?? 0);
+    const on=getBool(v.ShowOnBoard);
+    return `<div class="visitorItem">
+      <div class="visitorTop">
+        <div><p class="visitorName">${name}</p><p class="visitorMeta">${org}<br>${date} · ${start} to ${end}<br>Thank-you display: ${mins} minute(s)</p><span class="badge ${on?'badgeOn':'badgeOff'}">${on?'Showing on dashboard':'Cancelled / hidden'}</span></div>
+        <div class="actions" style="margin-top:0"><button class="secondary mini" type="button" onclick="editVisitor(${id})">Edit</button><button class="warning mini" type="button" onclick="cancelVisitor(${id})">Cancel visit</button><button class="danger mini" type="button" onclick="deleteVisitor(${id})">Delete</button></div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function getSelectedRange(){
+  let start=$("filterStartDate").value || todayISO();
+  let end=$("filterEndDate").value || start;
+  if(end < start) [start,end]=[end,start];
+  return {start,end};
+}
+
+function setDateRange(type){
+  const today=todayISO();
+  if(type==="today"){$("filterStartDate").value=today;$("filterEndDate").value=today;}
+  if(type==="tomorrow"){const t=addDaysISO(today,1);$("filterStartDate").value=t;$("filterEndDate").value=t;}
+  if(type==="week"){$("filterStartDate").value=today;$("filterEndDate").value=addDaysISO(today,6);}
+  loadVisitorsRange();
+}
+
+async function loadVisitorsRange(showMessage=true){
+  const {start,end}=getSelectedRange();
+  const diff=daysBetween(start,end);
+  const label=formatRange(start,end);
+  if(diff < 0) return;
+  if(diff >= MAX_RANGE_DAYS){notify("Date range too large", `Please choose ${MAX_RANGE_DAYS} days or fewer.`, "warning");return}
+
+  try{
+    setLoading(true);
+    clearStatus();
+    setStatus(`Loading visitors for ${label}...`);
+    let combined=[];
+    const seen=new Set();
+    for(let i=0;i<=diff;i++){
+      const date=addDaysISO(start,i);
+      const data=await sendToFlow({action:"list", date});
+      const items=data.visitors || data.value || [];
+      items.forEach(item=>{
+        const key=getId(item) ?? `${cleanDate(item.VisitDate)}-${item.VisitorName}-${item.ArrivalTime}`;
+        if(!seen.has(String(key))){seen.add(String(key));combined.push(item)}
+      });
+    }
+    combined.sort((a,b)=>String(cleanDate(a.VisitDate)+cleanTime(a.ArrivalTime)).localeCompare(String(cleanDate(b.VisitDate)+cleanTime(b.ArrivalTime))));
+    renderVisitors(combined,label);
+    setStatus(`${combined.length} visitor${combined.length===1?"":"s"} found for ${label}.`);
+    if(showMessage) notify("Visitors loaded", `${combined.length} visitor${combined.length===1?"":"s"} found.`, "success");
+  }catch(e){
+    notify("Could not load visitors", e.message, "error");
+    setStatus("Could not load visitors. Check the Power Automate list action.","error");
+    $("visitorList").innerHTML='<div class="empty">Could not load visitors. Check the Power Automate list action.</div>';
+  }finally{setLoading(false)}
+}
+
+async function autoLoadToday(){
+  $("filterStartDate").value=todayISO();
+  $("filterEndDate").value=todayISO();
+  await loadVisitorsRange(false);
+}
+
+$("visitorForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  const visitor=formVisitor();
+  const err=validateVisitor(visitor);
+  if(err){notify("Check visitor details", err, "warning");return}
+  const action=visitor.id ? "update" : "create";
+  try{
+    setLoading(true);
+    $("saveBtn").textContent=action==="update"?"Updating...":"Saving...";
+    await sendToFlow({action, visitor});
+    notify(action==="update"?"Visitor updated":"Visitor added", "The welcome dashboard will update automatically.", "success");
+    const savedDate=visitor.VisitDate;
+    clearForm();
+    $("filterStartDate").value=savedDate;
+    $("filterEndDate").value=savedDate;
+    await loadVisitorsRange(false);
+  }catch(e){notify("Could not save visitor", e.message, "error")}
+  finally{setLoading(false);$("saveBtn").textContent=$("editingId").value?"Update visitor":"Add visitor"}
+});
+
+["visitorName","organisation","visitDate","arrivalTime","departureTime","thankYouMinutes","showOnBoard"].forEach(id=>{$(id).addEventListener("input",updatePreview);$(id).addEventListener("change",updatePreview)});
+
+clearForm();
+autoLoadToday();
+</script>
+</body>
+</html>
